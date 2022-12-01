@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "github.com/hl540/chat-shell/src/proto";
+
+enum MessageType {
+  MessageType_Default = 0;
+  MessageType_Text = 1;
+}
+
+enum TargetType {
+  TargetType_Default = 0;
+  TargetType_User = 1;
+  TargetType_Channel = 2;
+}
+
+message BaseRequest {
+  string user = 1;
+}
+
+message Message {
+  MessageType type = 2;
+  string context = 3;
+  string from = 4;
+  string target = 5;
+  TargetType targetType = 6;
+}
+
+message UsersReply {
+  repeated string data = 1;
+}
+
+message ChannelsReply {
+  repeated string Data = 1;
+}
+
+service ChatServer {
+  rpc chat(stream Message) returns (stream Message) {}
+  rpc users(BaseRequest) returns (UsersReply) {}
+  rpc channels(BaseRequest) returns (ChannelsReply) {}
+}
